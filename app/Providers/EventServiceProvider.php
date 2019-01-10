@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\AdminRegistered;
+use App\Listeners\SendAdminEmailVerificationNotification;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -18,6 +20,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        AdminRegistered::class =>[
+          SendAdminEmailVerificationNotification::class,
+        ],
+
     ];
 
     /**

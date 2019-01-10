@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Admin;
+use App\Events\AdminRegistered;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -65,17 +66,17 @@ class RegisterController extends Controller
     }
 
 
-//    public function register(Request $request)
-//    {
-//        $this->validator($request->all())->validate();
-//
-//        event(new Registered($user = $this->create($request->all())));
-//
-//        $this->guard()->login($user);
-//
-//        return $this->registered($request, $user)
-//            ?: redirect($this->redirectPath());
-//    }
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new AdminRegistered($user = $this->create($request->all())));
+
+        $this->guard()->login($user);
+
+        return $this->registered($request, $user)
+            ?: redirect($this->redirectPath());
+    }
 
 
     protected function create(array $data)

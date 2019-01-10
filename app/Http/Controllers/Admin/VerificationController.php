@@ -4,6 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\Request;
+use App\Events\AdminRegistered;
+
+use App\Admin;
+use Illuminate\Support\Facades\Auth;
+
 
 class VerificationController extends Controller
 {
@@ -27,15 +33,26 @@ class VerificationController extends Controller
      */
     protected $redirectTo = 'admin/dashboard';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+
+
+    public function show(Request $request)
+    {
+        return $request->user('admin')->hasVerifiedEmail()
+            ? redirect($this->redirectPath())
+            : view('admin.verify');
+    }
+
+
+
     public function __construct()
     {
-        $this->middleware('guest:admin');
+
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
+
+    public function guard(){
+        return Auth::guard('admin');
+    }
+
 }

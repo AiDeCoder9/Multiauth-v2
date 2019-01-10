@@ -15,10 +15,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 
-Route::get('admin/dashboard','AdminController@index');
+
+
+Route::get('admin/email/resend','Admin\VerificationController@resend')->name('admin.verification.resend');
+Route::get('admin/email/verify','Admin\VerificationController@show')->name('admin.verification.notice');
+Route::get('admin/email/verify/{id}','Admin\VerificationController@verify')->name('admin.verification.verify');
+
+
+Route::get('admin/dashboard','AdminController@index')->name('admin.dashboard')->middleware('adminVerified');
 Route::get('admin','Admin\LoginController@showLoginForm')->name('admin.login');
 Route::post('admin','Admin\LoginController@login');
 
@@ -33,4 +40,7 @@ Route::get('admin-password/reset/{token}','Admin\ResetPasswordController@showRes
 
 Route::get('admin/logout','Admin\LoginController@logout')->name('admin.logout');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');;
+
+
+;
