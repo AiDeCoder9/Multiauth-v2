@@ -60,6 +60,18 @@ class VerificationController extends Controller
     }
 
 
+    public function resend(Request $request)
+    {
+        if ($request->user('admin')->hasVerifiedEmail()) {
+            return redirect($this->redirectPath());
+        }
+
+        $request->user('admin')->sendEmailVerificationNotification();
+
+        return back()->with('resent', true);
+    }
+
+
 
     public function __construct()
     {
@@ -71,5 +83,8 @@ class VerificationController extends Controller
     public function guard(){
         return Auth::guard('admin');
     }
+
+
+
 
 }

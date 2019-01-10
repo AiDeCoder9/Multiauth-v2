@@ -9,8 +9,10 @@
 </head>
 <body>
 
+<span class="text-success">{{Auth::user('admin')->name}}</span>
 
-<h1>this is the admin dashboard</h1>
+
+<h1>this is the admin dashboard  </h1>
 
 </body>
 </html>
