@@ -7,6 +7,9 @@ use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
 use App\Events\AdminRegistered;
 
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Auth\Access\AuthorizationException;
+
 use App\Admin;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,9 +40,23 @@ class VerificationController extends Controller
 
     public function show(Request $request)
     {
+//        dd($request->user('admin'));
         return $request->user('admin')->hasVerifiedEmail()
             ? redirect($this->redirectPath())
             : view('admin.verify');
+    }
+
+    public function verify(Request $request)
+    {
+        if ($request->route('id') != $request->user('admin')->getKey()) {
+            throw new AuthorizationException;
+        }
+
+        if ($request->user('admin')->markEmailAsVerified('admin')) {
+            event(new Verified($request->user('admin')));
+        }
+
+        return redirect($this->redirectPath())->with('adminVerified', true);
     }
 
 
